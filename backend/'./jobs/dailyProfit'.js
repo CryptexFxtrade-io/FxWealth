@@ -1,12 +1,21 @@
-const User = require('../models/User');
+// backend/jobs/dailyProfit.js
+const cron = require('node-cron');
 
-module.exports.run = async function() {
-  const users = await User.find({});
-  for (let user of users) {
-    const profit = user.balance * 0.01; // 1% daily
-    user.balance += profit;
-    await user.save();
-    console.log(`Added daily profit ${profit} to ${user.email}`);
-  }
-  console.log('✅ Daily profit job completed');
-};
+// This function will calculate daily profit
+function calculateDailyProfit() {
+  console.log("Running daily profit job...");
+
+  // TODO: Add your logic here
+  // Example: update users' profits in MongoDB
+  // e.g., User.updateMany(...)
+
+  console.log("Daily profit job completed!");
+}
+
+// Schedule the job to run every day at midnight
+cron.schedule('0 0 * * *', () => {
+  console.log("Scheduled daily profit job started...");
+  calculateDailyProfit();
+});
+
+module.exports = calculateDailyProfit;

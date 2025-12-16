@@ -1,60 +1,27 @@
-// backend/routes/auth.js
 const express = require('express');
-const router = express.Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// -------------------------
-// POST /api/auth/register
-// -------------------------
+const router = express.Router();
+
 router.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-
-  if (!username || !password)
-    return res.status(400).json({ message: 'Username and password required' });
-
-  try {
-    const existingUser = await User.findOne({ username });
-    if (existingUser)
-      return res.status(400).json({ message: 'Username already exists' });
-
-    const user = new User({ username, password });
-    await user.save();
-
-    res.status(201).json({ message: 'User registered successfully', user: { username: user.username, id: user._id } });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+  const { email, password } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
+  await new User({ email, password: hashed }).save();
+  res.json({ message: 'Registered' });
 });
 
-// -------------------------
-// POST /api/auth/login
-// -------------------------
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).json({ message: 'Invalid' });
 
-  if (!username || !password)
-    return res.status(400).json({ message: 'Username and password required' });
+  const ok = await bcrypt.compare(password, user.password);
+  if (!ok) return res.status(400).json({ message: 'Invalid' });
 
-  try {
-    const user = await User.findOne({ username });
-    if (!user)
-      return res.status(400).json({ message: 'Invalid credentials' });
-
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch)
-      return res.status(400).json({ message: 'Invalid credentials' });
-
-    res.json({ message: 'Login successful', user: { username: user.username, id: user._id } });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// -------------------------
-// Optional GET route for browser testing
-// -------------------------
-router.get('/', (req, res) => {
-  res.send('Auth route is working');
+  const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
+  res.json({ token });
 });
 
 module.exports = router;

@@ -1,7 +1,9 @@
 const cron = require('node-cron');
 
-cron.schedule('0 0 * * *', () => {
-  console.log('Daily profit job running...');
+console.log('dailyProfit file loaded');
+
+cron.schedule('* * * * *', () => {
+  console.log('Daily profit job running');
 });
 
 module.exports = {};

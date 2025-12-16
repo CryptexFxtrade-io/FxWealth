@@ -1,1 +1,1 @@
-npm install express mongoose dotenv cors bcryptjs jsonwebtoken
+npm list mongoose mongodb

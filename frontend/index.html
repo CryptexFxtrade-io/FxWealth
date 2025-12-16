@@ -4,9 +4,26 @@
   <meta charset="UTF-8" />
   <title>FxWealth</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>FxWealth Frontend is Live</h1>
-  <p>If you can see this, Vercel deployment is working.</p>
+  <h1>FxWealth</h1>
+  <div id="login-register">
+    <h2>Register / Login</h2>
+    <input id="name" placeholder="Name" />
+    <input id="email" placeholder="Email" />
+    <input id="password" placeholder="Password" type="password" />
+    <button onclick="register()">Register</button>
+    <button onclick="login()">Login</button>
+  </div>
+  <div id="dashboard" style="display:none">
+    <h2>Welcome, <span id="user-name"></span></h2>
+    <p>Balance: $<span id="balance">0</span></p>
+    <input id="invest-amount" placeholder="Amount" />
+    <button onclick="invest()">Invest</button>
+    <input id="withdraw-amount" placeholder="Withdraw Amount" />
+    <button onclick="withdraw()">Withdraw</button>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -1,35 +1,14 @@
 const express = require('express');
-const router = express.Router();
-const { auth, adminOnly } = require('../middleware/auth');
-const Investment = require('../models/Investment');
-const Transaction = require('../models/Transaction');
+const auth = require('../middleware/auth');
 const User = require('../models/User');
+const Investment = require('../models/Investment');
 
-// Add investment plan
-router.post('/plan', auth, adminOnly, async (req, res) => {
-  try {
-    const plan = new Investment(req.body);
-    await plan.save();
-    res.status(201).json(plan);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+const router = express.Router();
 
-// Approve transaction
-router.post('/transaction/:id/approve', auth, adminOnly, async (req, res) => {
-  try {
-    const tx = await Transaction.findById(req.params.id).populate('user').populate('investment');
-    if (!tx) return res.status(404).json({ message: 'Transaction not found' });
-    tx.status = 'approved';
-    tx.profit = (tx.amount * tx.investment.interestPercent) / 100;
-    tx.user.balance += tx.amount + tx.profit;
-    await tx.user.save();
-    await tx.save();
-    res.json(tx);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
+router.get('/stats', auth(['admin']), async (req, res) => {
+  const users = await User.countDocuments();
+  const investments = await Investment.countDocuments();
+  res.json({ users, investments });
 });
 
 module.exports = router;

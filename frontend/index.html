@@ -1,11 +1,29 @@
-<h1>FxWealth</h1>
-<h2>Register / Login</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FxWealth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-<input id="name" placeholder="Name">
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
+  <div class="container">
+    <h1>FxWealth</h1>
+    <p class="subtitle">Secure Investment Platform</p>
 
-<button onclick="register()">Register</button>
-<button onclick="login()">Login</button>
+    <div class="form">
+      <input id="name" type="text" placeholder="Full Name">
+      <input id="email" type="email" placeholder="Email Address">
+      <input id="password" type="password" placeholder="Password">
 
-<script src="script.js"></script>
+      <button class="btn register" onclick="register()">Register</button>
+      <button class="btn login" onclick="login()">Login</button>
+    </div>
+
+    <p id="message"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

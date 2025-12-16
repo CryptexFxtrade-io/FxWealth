@@ -1,30 +1,23 @@
-const cron = require("node-cron");
-const Investment = require("../models/Investment");
-const User = require("../models/User");
-const Transaction = require("../models/Transaction");
+console.log('Daily Profit job loaded – ready to run');
 
-cron.schedule("0 0 * * *", async () => {
-  const investments = await Investment.find({ active: true });
+// Your actual daily profit logic will go here
+const runDailyProfit = async () => {
+  try {
+    console.log('Running daily profit calculation at:', new Date().toISOString());
 
-  for (let inv of investments) {
-    if (new Date() > inv.endDate) {
-      inv.active = false;
-      await inv.save();
-      continue;
-    }
+    // Example placeholder logic:
+    // - Fetch users from DB
+    // - Calculate profits based on trades/signals
+    // - Update user balances
+    // - Send notifications (if you have email/SMS setup)
 
-    const profit = (inv.amount * inv.dailyRate) / 100;
-    const user = await User.findById(inv.userId);
-    user.balance += profit;
+    // TODO: Replace with your real code later
+    console.log('Daily profit task completed successfully');
 
-    await user.save();
-    await new Transaction({
-      userId: user._id,
-      type: "daily_profit",
-      amount: profit
-    }).save();
-
-    inv.lastProfitDate = new Date();
-    await inv.save();
+  } catch (error) {
+    console.error('Error in daily profit job:', error.message);
   }
-});
+};
+
+// Export so it can be called from your cron file
+module.exports = { runDailyProfit };

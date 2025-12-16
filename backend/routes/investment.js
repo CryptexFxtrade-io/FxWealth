@@ -1,15 +1,21 @@
 const express = require('express');
-const router = express.Router();
+const auth = require('../middleware/auth');
 const Investment = require('../models/Investment');
 
-// Example: Get all investments
-router.get('/', async (req, res) => {
-  try {
-    const investments = await Investment.find();
-    res.json(investments);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+const router = express.Router();
+
+router.post('/', auth(['user']), async (req, res) => {
+  const inv = await Investment.create({
+    userId: req.user.id,
+    amount: req.body.amount,
+    plan: req.body.plan
+  });
+  res.json(inv);
+});
+
+router.get('/', auth(), async (req, res) => {
+  const data = await Investment.find({ userId: req.user.id });
+  res.json(data);
 });
 
 module.exports = router;

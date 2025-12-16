@@ -23,14 +23,16 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // -------------------------------
-// Import Jobs Safely
+// Safe Job Import
 // -------------------------------
-
-// Use path.join + __dirname for absolute path
-const dailyProfit = require(path.join(__dirname, 'jobs', 'dailyProfit'));
-
-// If you have other jobs, import them similarly
-// const someOtherJob = require(path.join(__dirname, 'jobs', 'someOtherJob'));
+let dailyProfit;
+try {
+  dailyProfit = require(path.join(__dirname, 'jobs', 'dailyProfit'));
+  console.log('✅ dailyProfit job loaded');
+} catch (err) {
+  console.error('❌ Could not load dailyProfit job:', err.message);
+  dailyProfit = { run: () => console.log('dailyProfit job missing, skipping') };
+}
 
 // -------------------------------
 // Example Routes
@@ -39,18 +41,19 @@ app.get('/', (req, res) => {
   res.send('FxWealth Backend is running');
 });
 
-// Add your API routes here
-// app.use('/api/users', require('./routes/users'));
-
 // -------------------------------
 // Start Server
 // -------------------------------
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   
-  // Optionally, run dailyProfit job on server start
+  // Run dailyProfit job if available
   if (dailyProfit && typeof dailyProfit.run === 'function') {
-    dailyProfit.run();
-    console.log('✅ dailyProfit job executed');
+    try {
+      dailyProfit.run();
+      console.log('✅ dailyProfit job executed');
+    } catch (err) {
+      console.error('❌ Error running dailyProfit job:', err.message);
+    }
   }
 });

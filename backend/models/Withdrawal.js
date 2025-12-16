@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-module.exports = mongoose.model("Withdrawal", new mongoose.Schema({
-  userId: mongoose.Schema.Types.ObjectId,
+const WithdrawalSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   amount: Number,
-  address: String,
-  status: { type: String, default: "pending" }
-}));
+  status: { type: String, default: 'pending' }
+}, { timestamps: true });
+
+module.exports = mongoose.model('Withdrawal', WithdrawalSchema);

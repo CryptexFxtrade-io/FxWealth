@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const InvestmentSchema = new mongoose.Schema({
-  user: { type: String, required: true },
-  amount: { type: Number, required: true },
-  plan: { type: String, required: true },
-  date: { type: Date, default: Date.now },
+  userId: mongoose.Schema.Types.ObjectId,
+  amount: Number,
+  profit: { type: Number, default: 0 },
+  status: { type: String, default: 'active' }
 });
 
 module.exports = mongoose.model('Investment', InvestmentSchema);

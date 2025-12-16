@@ -1,55 +1,35 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const Withdrawal = require('../models/Withdrawal');
-
 const router = express.Router();
+const { auth, adminOnly } = require('../middleware/auth');
+const Investment = require('../models/Investment');
+const Transaction = require('../models/Transaction');
+const User = require('../models/User');
 
-function auth(req, res, next) {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.status(401).json({ message: 'Unauthorized' });
+// Add investment plan
+router.post('/plan', auth, adminOnly, async (req, res) => {
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
-    next();
-  } catch {
-    res.status(401).json({ message: 'Invalid token' });
+    const plan = new Investment(req.body);
+    await plan.save();
+    res.status(201).json(plan);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
-}
-
-function adminOnly(req, res, next) {
-  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
-  next();
-}
-
-router.get('/users', auth, adminOnly, async (req, res) => {
-  const users = await User.find().select('-password');
-  res.json(users);
 });
 
-router.get('/withdrawals', auth, adminOnly, async (req, res) => {
-  const withdrawals = await Withdrawal.find().populate('user', 'name email');
-  res.json(withdrawals);
-});
-
-router.post('/withdrawals/:id/approve', auth, adminOnly, async (req, res) => {
-  const w = await Withdrawal.findById(req.params.id).populate('user');
-  if (!w) return res.status(404).json({ message: 'Withdrawal not found' });
-  if (w.status !== 'pending') return res.status(400).json({ message: 'Already processed' });
-  if (w.user.balance < w.amount) return res.status(400).json({ message: 'Insufficient balance' });
-  w.user.balance -= w.amount;
-  w.status = 'approved';
-  await w.user.save();
-  await w.save();
-  res.json({ message: 'Withdrawal approved' });
-});
-
-router.post('/withdrawals/:id/reject', auth, adminOnly, async (req, res) => {
-  const w = await Withdrawal.findById(req.params.id);
-  if (!w) return res.status(404).json({ message: 'Withdrawal not found' });
-  if (w.status !== 'pending') return res.status(400).json({ message: 'Already processed' });
-  w.status = 'rejected';
-  await w.save();
-  res.json({ message: 'Withdrawal rejected' });
+// Approve transaction
+router.post('/transaction/:id/approve', auth, adminOnly, async (req, res) => {
+  try {
+    const tx = await Transaction.findById(req.params.id).populate('user').populate('investment');
+    if (!tx) return res.status(404).json({ message: 'Transaction not found' });
+    tx.status = 'approved';
+    tx.profit = (tx.amount * tx.investment.interestPercent) / 100;
+    tx.user.balance += tx.amount + tx.profit;
+    await tx.user.save();
+    await tx.save();
+    res.json(tx);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
 module.exports = router;

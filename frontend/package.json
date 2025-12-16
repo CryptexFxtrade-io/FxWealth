@@ -1,14 +1,11 @@
-{
-  "name": "fxwealth-frontend",
-  "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build"
-  }
-}
+const API_BASE = "https://YOUR-BACKEND.onrender.com";
+
+export const api = (url, options = {}) =>
+  fetch(`${API_BASE}${url}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      ...options.headers
+    }
+  });

@@ -1,11 +1,10 @@
-const mongoose = require('mongoose');
+// backend/routes/investment.js
+const express = require('express');
+const router = express.Router();
 
-const investmentSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  minAmount: { type: Number, required: true },
-  maxAmount: { type: Number, required: true },
-  durationDays: { type: Number, required: true },
-  interestPercent: { type: Number, required: true },
-}, { timestamps: true });
+// Example investment route
+router.get('/', (req, res) => {
+  res.send('Investment route works');
+});
 
-module.exports = mongoose.model('Investment', investmentSchema);
+module.exports = router;

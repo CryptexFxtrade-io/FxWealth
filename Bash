@@ -1,3 +1,1 @@
-git add backend/models/Investment.js
-git commit -m "Add Investment model"
-git push
+npm install express mongoose dotenv cors bcryptjs jsonwebtoken

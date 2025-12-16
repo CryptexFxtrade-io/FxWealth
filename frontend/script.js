@@ -1,3 +1,7 @@
-body{font-family:Arial;text-align:center;padding:50px;}
-input{margin:5px;padding:5px;}
-button{padding:5px 10px;margin:5px;cursor:pointer;}
+const API = 'https://https://fxwealth-backend.onrender.com;
+
+fetch(`${API}/api/auth/register`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ username, email, password })
+});

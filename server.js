@@ -1,6 +1,6 @@
 // server.js
 const express = require('express');
-const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGO_URI);
 const cors = require('cors');
 require('dotenv').config();
 const path = require('path');

@@ -1,1 +1,2 @@
-npm install dotenv
+cd backend
+ls

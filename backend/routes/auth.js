@@ -1,33 +1,30 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
-  const { email, password } = req.body;
-  const hashed = await bcrypt.hash(password, 10);
-  await User.create({ email, password: hashed });
-  res.json({ message: 'Registered successfully' });
-});
+// Get logged-in user
+router.get('/user', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
 
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+    if (!token) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
 
-  const user = await User.findOne({ email });
-  if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  const ok = await bcrypt.compare(password, user.password);
-  if (!ok) return res.status(400).json({ message: 'Invalid credentials' });
+    const user = await User.findById(decoded.id).select('-password');
 
-  const token = jwt.sign(
-    { id: user._id, role: user.role },
-    process.env.FxWealthJWT_SECRET,
-    { expiresIn: '7d' }
-  );
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-  res.json({ token });
+    res.json(user);
+  } catch (err) {
+    res.status(401).json({ message: 'Invalid token' });
+  }
 });
 
 module.exports = router;

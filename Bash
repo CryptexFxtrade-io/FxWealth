@@ -1,1 +1,2 @@
-nano server.js
+cd ..
+pwd

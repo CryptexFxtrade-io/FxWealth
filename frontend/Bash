@@ -1,3 +1,1 @@
-cd ~/FxWealth/frontend
-npm install          # install frontend dependencies
-npm run build        # build production folder (creates build/)
+git commit -m "Build frontend for Vercel after changes"

@@ -1,4 +1,1 @@
 cd ~/FxWealth/frontend
-npm install
-npm start        # for dev
-npm run build    # for production build

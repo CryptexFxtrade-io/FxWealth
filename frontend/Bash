@@ -1,1 +1,3 @@
-git commit -m "Build frontend for Vercel after changes"
+cd ~/FxWealth/frontend
+npm install
+npm start

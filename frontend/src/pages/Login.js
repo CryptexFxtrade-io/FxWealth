@@ -1,33 +1,27 @@
 import React, { useState } from 'react';
-import { api } from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../api/auth';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = await api('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password })
-    });
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-      navigate('/dashboard');
-    } else alert(data.message);
+    try {
+      const data = await loginUser({ email, password });
+      alert('Login successful: ' + data.token);
+    } catch (err) {
+      alert('Error: ' + err.response.data.message);
+    }
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
+      <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
+      <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
+      <button type="submit">Login</button>
+    </form>
   );
 }
 

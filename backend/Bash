@@ -1,3 +1,1 @@
-cd backend
-npm install node-cron
-npm install
+cd ~/FxWealth/backend

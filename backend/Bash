@@ -1,1 +1,2 @@
-npm install
+CTRL + C
+node server.js

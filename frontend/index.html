@@ -1,29 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>FxWealth</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <h2>FxWealth Login</h2>
 
-  <div class="container">
-    <h1>FxWealth</h1>
-    <p class="subtitle">Secure Investment Platform</p>
+  <input id="email" placeholder="Email"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
+  <button onclick="login()">Login</button>
 
-    <div class="form">
-      <input id="name" type="text" placeholder="Full Name">
-      <input id="email" type="email" placeholder="Email Address">
-      <input id="password" type="password" placeholder="Password">
+  <pre id="output"></pre>
 
-      <button class="btn register" onclick="register()">Register</button>
-      <button class="btn login" onclick="login()">Login</button>
-    </div>
+  <script>
+    async function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
 
-    <p id="message"></p>
-  </div>
+      const res = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
 
-  <script src="script.js"></script>
+      const data = await res.json();
+      document.getElementById('output').textContent =
+        JSON.stringify(data, null, 2);
+    }
+  </script>
 </body>
 </html>

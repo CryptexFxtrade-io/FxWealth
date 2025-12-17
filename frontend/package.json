@@ -1,9 +1,19 @@
-"dependencies": {
-  "react": "^18.2.0",
-  "react-dom": "^18.2.0",
-  "react-router-dom": "^6.15.0",
-  "axios": "^1.6.0",
-  "dotenv": "^17.2.3",
-  "react-scripts": "5.0.1",
-  "lodash": "^4.17.21"
+{
+  "name": "fxwealth-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0",
+    "axios": "^1.6.0",
+    "dotenv": "^17.2.3",
+    "react-scripts": "5.0.1",
+    "lodash": "^4.17.21"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test"
+  }
 }

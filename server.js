@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
 console.log('Mongo URI:', process.env.MONGO_URI); // Debug line
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch( => console.error('MongoDB connection', ));
 
 // Start server
 const PORT = process.env.PORT || 5000;

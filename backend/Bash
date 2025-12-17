@@ -1,2 +1,2 @@
-curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-http://localhost:5000/api/auth/user
+cd backend
+npm install node-cron

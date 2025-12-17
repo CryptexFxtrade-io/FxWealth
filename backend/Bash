@@ -1,2 +1,3 @@
 cd backend
 npm install node-cron
+npm install

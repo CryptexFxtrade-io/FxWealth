@@ -1,2 +1,1 @@
-cd ~/FxWealth/backend
-npm install dotenv
+npx nodemon server.js

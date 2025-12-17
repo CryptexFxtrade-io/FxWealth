@@ -1,3 +1,1 @@
-cd ~/FxWealth/frontend
-npm install
-npm start
+nano package.json
